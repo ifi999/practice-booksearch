@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'com.example'
@@ -11,6 +12,14 @@ description = 'Demo project for Spring Boot'
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+jacocoTestReport {
+	reports {
+		xml.required = true
+		csv.required = true
+		html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
 	}
 }
 
@@ -25,6 +34,37 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.00
+			}
+		}
+	}
+}
+
+task printCoverage(dependsOn: jacocoTestReport) {
+	doLast {
+		def csvFile = file("${buildDir}/reports/jacoco/test/jacocoTestReport.csv")
+		if (csvFile.exists()) {
+			def lines = csvFile.readLines()
+			if (lines.size() > 1) {
+				def data = lines[1].split(',')
+				def missed = data[3] as Double
+				def covered = data[4] as Double
+				def total = missed + covered
+				def percentage = total > 0 ? (covered / total * 100).round(2) : 0
+				println "Code Coverage: ${percentage}%"
+			}
+		}
+	}
 }
 
 tasks.named('test') {
