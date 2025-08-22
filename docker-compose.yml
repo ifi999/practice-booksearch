@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: booksearch_postgres
+    environment:
+      POSTGRES_DB: booksearch_db
+      POSTGRES_USER: booksearch_user
+      POSTGRES_PASSWORD: booksearch_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - booksearch_network
+
+  app:
+    build: .
+    container_name: booksearch_app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/booksearch_db
+      SPRING_DATASOURCE_USERNAME: booksearch_user
+      SPRING_DATASOURCE_PASSWORD: booksearch_password
+    networks:
+      - booksearch_network
+
+volumes:
+  postgres_data:
+
+networks:
+  booksearch_network:
+    driver: bridge
