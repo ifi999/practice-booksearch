@@ -1,7 +1,7 @@
 package com.example.booksearch.controller;
 
 import com.example.booksearch.dto.BookResponseDto;
-import com.example.booksearch.service.BookService;
+import com.example.booksearch.service.SearchService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/search")
 public class SearchController {
 
-    private final BookService bookService;
+    private final SearchService searchService;
 
-    public SearchController(BookService bookService) {
-        this.bookService = bookService;
+    public SearchController(SearchService searchService) {
+        this.searchService = searchService;
     }
 
     @GetMapping("/books")
@@ -25,7 +25,7 @@ public class SearchController {
             @RequestParam(defaultValue = "20") int size) {
         
         Pageable pageable = PageRequest.of(page, size);
-        Page<BookResponseDto> searchResults = bookService.findBooks(q, pageable)
+        Page<BookResponseDto> searchResults = searchService.searchBooks(q, pageable)
                 .map(BookResponseDto::from);
         
         return ResponseEntity.ok(searchResults);
