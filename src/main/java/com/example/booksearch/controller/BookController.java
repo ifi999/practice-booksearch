@@ -5,6 +5,8 @@ import com.example.booksearch.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +23,8 @@ public class BookController {
     @GetMapping
     public ResponseEntity<Page<BookResponseDto>> getBooks(
             @RequestParam(required = false) String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         
-        Pageable pageable = PageRequest.of(page, size);
         Page<BookResponseDto> books = bookService.findBooks(keyword, pageable)
                 .map(BookResponseDto::from);
         
