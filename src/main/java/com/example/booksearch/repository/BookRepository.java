@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
@@ -17,6 +19,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByAuthorContaining(String keyword);
 
     List<Book> findByTitleContainingOrAuthorContaining(String titleKeyword, String authorKeyword);
+
+    Page<Book> findByTitleContainingOrAuthorContaining(String titleKeyword, String authorKeyword, Pageable pageable);
 
     boolean existsByIsbn(String isbn);
 }
