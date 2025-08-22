@@ -24,12 +24,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Page<Book> findByTitleContainingOrAuthorContaining(String titleKeyword, String authorKeyword, Pageable pageable);
 
-    @Query("SELECT b FROM Book b WHERE " +
+    @Query("SELECT DISTINCT b FROM Book b WHERE " +
            "(b.title LIKE %:term1% OR b.author LIKE %:term1%) OR " +
            "(b.title LIKE %:term2% OR b.author LIKE %:term2%)")
     Page<Book> findByIncludeTermsOr(@Param("term1") String term1, @Param("term2") String term2, Pageable pageable);
 
-    @Query("SELECT b FROM Book b WHERE " +
+    @Query("SELECT DISTINCT b FROM Book b WHERE " +
            "((b.title LIKE %:term1% OR b.author LIKE %:term1%) OR " +
            "(b.title LIKE %:term2% OR b.author LIKE %:term2%)) AND " +
            "(b.title NOT LIKE %:excludeTerm% AND b.author NOT LIKE %:excludeTerm%)")
