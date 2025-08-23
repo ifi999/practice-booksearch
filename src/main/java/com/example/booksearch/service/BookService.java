@@ -1,6 +1,7 @@
 package com.example.booksearch.service;
 
 import com.example.booksearch.domain.Book;
+import com.example.booksearch.exception.BookNotFoundException;
 import com.example.booksearch.repository.BookRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,6 @@ public class BookService {
 
     public Book findById(Long id) {
         return bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found with id: " + id));
+                .orElseThrow(() -> new BookNotFoundException(id));
     }
 }

@@ -33,11 +33,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookResponseDto> getBookById(@PathVariable Long id) {
-        try {
-            BookResponseDto book = BookResponseDto.from(bookService.findById(id));
-            return ResponseEntity.ok(book);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        BookResponseDto book = BookResponseDto.from(bookService.findById(id));
+        return ResponseEntity.ok(book);
     }
 }
