@@ -2,6 +2,7 @@ package com.example.booksearch.service;
 
 import com.example.booksearch.domain.Book;
 import com.example.booksearch.repository.BookRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class SearchService {
         this.searchLogService = searchLogService;
     }
 
+    @Cacheable(value = "searchResults", key = "#query + '_' + #pageable.pageNumber + '_' + #pageable.pageSize + '_' + #pageable.sort")
     public Page<Book> searchBooks(String query, Pageable pageable) {
         if (query == null || query.trim().isEmpty()) {
             return bookRepository.findAll(pageable);
