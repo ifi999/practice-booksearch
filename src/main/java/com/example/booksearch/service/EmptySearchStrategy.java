@@ -29,4 +29,9 @@ public class EmptySearchStrategy implements SearchStrategy {
     public int getPriority() {
         return 0;
     }
+
+    @Override
+    public String getStrategyName() {
+        return "EMPTY_SEARCH";
+    }
 }

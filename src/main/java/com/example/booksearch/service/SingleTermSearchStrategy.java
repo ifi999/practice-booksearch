@@ -32,4 +32,9 @@ public class SingleTermSearchStrategy implements SearchStrategy {
     public int getPriority() {
         return 1;
     }
+
+    @Override
+    public String getStrategyName() {
+        return "SINGLE_TERM_SEARCH";
+    }
 }

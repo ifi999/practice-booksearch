@@ -33,4 +33,9 @@ public class OrSearchStrategy implements SearchStrategy {
     public int getPriority() {
         return 2;
     }
+
+    @Override
+    public String getStrategyName() {
+        return "OR_SEARCH";
+    }
 }

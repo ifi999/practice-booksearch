@@ -31,4 +31,14 @@ public class SearchStrategyManager {
                 .map(strategy -> strategy.search(searchQuery, pageable))
                 .orElseThrow(() -> new IllegalArgumentException("지원되지 않는 검색 쿼리입니다."));
     }
+
+    public SearchResult searchWithMetadata(SearchQuery searchQuery, Pageable pageable) {
+        SearchStrategy selectedStrategy = strategies.stream()
+                .filter(strategy -> strategy.canHandle(searchQuery))
+                .max(Comparator.comparing(SearchStrategy::getPriority))
+                .orElseThrow(() -> new IllegalArgumentException("지원되지 않는 검색 쿼리입니다."));
+
+        Page<Book> results = selectedStrategy.search(searchQuery, pageable);
+        return new SearchResult(results, selectedStrategy.getStrategyName());
+    }
 }
