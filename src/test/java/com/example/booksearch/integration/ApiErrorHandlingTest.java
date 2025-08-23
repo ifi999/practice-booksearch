@@ -127,7 +127,7 @@ class ApiErrorHandlingTest {
             mockMvc.perform(get("/api/books")
                             .param("sort", "nonexistentfield"))
                     .andDo(print())
-                    .andExpect(status().isOk()); // Spring Data JPA는 잘못된 정렬 필드를 무시하거나 예외 발생
+                    .andExpect(status().isInternalServerError()); // 글로벌 예외 처리기로 500 응답
         } catch (Exception e) {
             // 잘못된 정렬 필드로 인한 예외는 정상적인 동작
             System.out.println("예상된 정렬 필드 오류: " + e.getMessage());
