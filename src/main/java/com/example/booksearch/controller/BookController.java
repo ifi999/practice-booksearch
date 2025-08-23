@@ -1,5 +1,6 @@
 package com.example.booksearch.controller;
 
+import com.example.booksearch.annotation.RateLimit;
 import com.example.booksearch.dto.BookResponseDto;
 import com.example.booksearch.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,7 @@ public class BookController {
                     content = @Content(schema = @Schema(implementation = com.example.booksearch.dto.ErrorResponse.class)))
     })
     @GetMapping
+    @RateLimit(RateLimit.RateLimitType.BOOK_READ)
     public ResponseEntity<Page<BookResponseDto>> getBooks(
             @Parameter(description = "검색 키워드 (제목 또는 저자)", example = "자바")
             @RequestParam(required = false) String keyword,
@@ -58,6 +60,7 @@ public class BookController {
                     content = @Content(schema = @Schema(implementation = com.example.booksearch.dto.ErrorResponse.class)))
     })
     @GetMapping("/{id}")
+    @RateLimit(RateLimit.RateLimitType.BOOK_READ)
     public ResponseEntity<BookResponseDto> getBookById(
             @Parameter(description = "도서 ID", example = "1", required = true)
             @PathVariable Long id) {

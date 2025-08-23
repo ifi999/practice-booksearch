@@ -1,5 +1,6 @@
 package com.example.booksearch.controller;
 
+import com.example.booksearch.annotation.RateLimit;
 import com.example.booksearch.dto.BookResponseDto;
 import com.example.booksearch.dto.PopularSearchDto;
 import com.example.booksearch.dto.SearchResultWithMetadata;
@@ -42,6 +43,7 @@ public class SearchController {
                     content = @Content(schema = @Schema(implementation = com.example.booksearch.dto.ErrorResponse.class)))
     })
     @GetMapping("/books")
+    @RateLimit(RateLimit.RateLimitType.SEARCH_BASIC)
     public ResponseEntity<Page<BookResponseDto>> searchBooks(
             @Parameter(description = "검색 쿼리 (예: 'java|spring', 'programming -beginner')", example = "java|spring")
             @RequestParam(required = false) String q,
@@ -62,6 +64,7 @@ public class SearchController {
                     content = @Content(schema = @Schema(implementation = com.example.booksearch.dto.ErrorResponse.class)))
     })
     @GetMapping("/books/detailed")
+    @RateLimit(RateLimit.RateLimitType.SEARCH_BASIC)
     public ResponseEntity<SearchResultWithMetadata<BookResponseDto>> searchBooksWithMetadata(
             @Parameter(description = "검색 쿼리 (예: 'java|spring', 'programming -beginner')", example = "java|spring")
             @RequestParam(required = false) String q,
@@ -87,6 +90,7 @@ public class SearchController {
                     content = @Content(schema = @Schema(implementation = com.example.booksearch.dto.ErrorResponse.class)))
     })
     @GetMapping("/popular")
+    @RateLimit(RateLimit.RateLimitType.SEARCH_POPULAR)
     public ResponseEntity<List<PopularSearchDto>> getPopularSearchKeywords(
             @Parameter(description = "조회할 인기 검색어 개수", example = "10")
             @RequestParam(defaultValue = "10") int limit) {
