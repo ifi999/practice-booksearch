@@ -1,12 +1,12 @@
 package com.example.booksearch.controller;
 
+import com.example.booksearch.dto.ApiResponse;
 import com.example.booksearch.dto.BookResponseDto;
 import com.example.booksearch.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
@@ -30,13 +30,13 @@ public class BookController {
 
     @Operation(summary = "도서 목록 조회", description = "키워드로 도서를 검색하거나 전체 도서 목록을 페이징하여 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공", 
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공", 
                     content = @Content(schema = @Schema(implementation = Page.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청 파라미터",
                     content = @Content(schema = @Schema(implementation = com.example.booksearch.dto.ErrorResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<Page<BookResponseDto>> getBooks(
+    public ResponseEntity<ApiResponse<Page<BookResponseDto>>> getBooks(
             @Parameter(description = "검색 키워드 (제목 또는 저자)", example = "자바")
             @RequestParam(required = false) String keyword,
             @Parameter(description = "페이징 정보")
@@ -45,23 +45,25 @@ public class BookController {
         Page<BookResponseDto> books = bookService.findBooks(keyword, pageable)
                 .map(BookResponseDto::from);
         
-        return ResponseEntity.ok(books);
+        ApiResponse<Page<BookResponseDto>> response = ApiResponse.success(books);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "도서 상세 조회", description = "도서 ID로 특정 도서의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공",
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(schema = @Schema(implementation = BookResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "도서를 찾을 수 없음",
                     content = @Content(schema = @Schema(implementation = com.example.booksearch.dto.ErrorResponse.class))),
-            @ApiResponse(responseCode = "400", description = "잘못된 ID 형식",
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 ID 형식",
                     content = @Content(schema = @Schema(implementation = com.example.booksearch.dto.ErrorResponse.class)))
     })
     @GetMapping("/{id}")
-    public ResponseEntity<BookResponseDto> getBookById(
+    public ResponseEntity<ApiResponse<BookResponseDto>> getBookById(
             @Parameter(description = "도서 ID", example = "1", required = true)
             @PathVariable Long id) {
         BookResponseDto book = BookResponseDto.from(bookService.findById(id));
-        return ResponseEntity.ok(book);
+        ApiResponse<BookResponseDto> response = ApiResponse.success(book);
+        return ResponseEntity.ok(response);
     }
 }
