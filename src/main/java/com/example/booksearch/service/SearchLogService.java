@@ -2,6 +2,8 @@ package com.example.booksearch.service;
 
 import com.example.booksearch.domain.SearchLog;
 import com.example.booksearch.repository.SearchLogRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ public class SearchLogService {
         this.searchLogRepository = searchLogRepository;
     }
 
+    @CacheEvict(value = "popularKeywords", allEntries = true)
     public void logSearch(String keyword) {
         if (!StringUtils.hasText(keyword)) {
             return;
@@ -39,6 +42,7 @@ public class SearchLogService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "popularKeywords", key = "#limit")
     public List<SearchLog> getTopSearchKeywords(int limit) {
         return searchLogRepository.findTopSearchKeywords(PageRequest.of(0, limit));
     }
