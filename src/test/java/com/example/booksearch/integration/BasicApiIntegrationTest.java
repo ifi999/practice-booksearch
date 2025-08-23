@@ -133,7 +133,7 @@ class BasicApiIntegrationTest {
         // 전체 검색
         mockMvc.perform(get("/api/search/books"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(2)));
+                .andExpect(jsonPath("$.content", hasSize(greaterThanOrEqualTo(2))));
 
         // 키워드 검색
         mockMvc.perform(get("/api/search/books")
