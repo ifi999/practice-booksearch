@@ -8,4 +8,5 @@ public interface SearchStrategy {
     boolean canHandle(SearchQuery searchQuery);
     Page<Book> search(SearchQuery searchQuery, Pageable pageable);
     int getPriority();
+    String getStrategyName();
 }
