@@ -25,22 +25,23 @@ public class RateLimitConfig {
 
     @Bean
     public JedisBasedProxyManager proxyManager(JedisPool jedisPool) {
-        return new JedisBasedProxyManager(jedisPool);
+        return JedisBasedProxyManager.builderFor(jedisPool)
+                .build();
     }
 
     public Bucket createBookReadBucket(JedisBasedProxyManager proxyManager, String key) {
         return proxyManager.builder()
-                .build(key, () -> createBookReadConfiguration());
+                .build(key.getBytes(), () -> createBookReadConfiguration());
     }
 
     public Bucket createSearchBucket(JedisBasedProxyManager proxyManager, String key) {
         return proxyManager.builder()
-                .build(key, () -> createSearchConfiguration());
+                .build(key.getBytes(), () -> createSearchConfiguration());
     }
 
     public Bucket createPopularSearchBucket(JedisBasedProxyManager proxyManager, String key) {
         return proxyManager.builder()
-                .build(key, () -> createPopularSearchConfiguration());
+                .build(key.getBytes(), () -> createPopularSearchConfiguration());
     }
 
     private io.github.bucket4j.BucketConfiguration createBookReadConfiguration() {
