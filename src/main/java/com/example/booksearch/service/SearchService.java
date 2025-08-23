@@ -14,17 +14,23 @@ public class SearchService {
     private final BookRepository bookRepository;
     private final QueryParser queryParser;
     private final SearchStrategyManager searchStrategyManager;
+    private final SearchLogService searchLogService;
 
-    public SearchService(BookRepository bookRepository, QueryParser queryParser, SearchStrategyManager searchStrategyManager) {
+    public SearchService(BookRepository bookRepository, QueryParser queryParser, 
+                        SearchStrategyManager searchStrategyManager, SearchLogService searchLogService) {
         this.bookRepository = bookRepository;
         this.queryParser = queryParser;
         this.searchStrategyManager = searchStrategyManager;
+        this.searchLogService = searchLogService;
     }
 
     public Page<Book> searchBooks(String query, Pageable pageable) {
         if (query == null || query.trim().isEmpty()) {
             return bookRepository.findAll(pageable);
         }
+
+        // 검색어 로깅 (비동기적으로 처리)
+        searchLogService.logSearch(query);
 
         SearchQuery searchQuery = queryParser.parse(query);
         return searchStrategyManager.search(searchQuery, pageable);
