@@ -30,4 +30,9 @@ public class NotSearchStrategy implements SearchStrategy {
     public int getPriority() {
         return 3;
     }
+
+    @Override
+    public String getStrategyName() {
+        return "NOT_SEARCH";
+    }
 }

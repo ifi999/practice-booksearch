@@ -40,4 +40,9 @@ public class ComplexSearchStrategy implements SearchStrategy {
     public int getPriority() {
         return 4;
     }
+
+    @Override
+    public String getStrategyName() {
+        return "COMPLEX_SEARCH";
+    }
 }
